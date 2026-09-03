@@ -35,3 +35,11 @@ npm run dev                   # http://localhost:3000
 ## 스택
 
 Next.js 16 (App Router) · TypeScript · Tailwind v4 · shadcn/ui(Base UI) · Recharts · Prisma 7 · PostgreSQL · Auth.js v5
+
+## 배포
+
+- 운영 URL: https://kol.kang88.io (Vercel 프로젝트 `kolpulse`, GitHub `kang88xx/kol-project-kang88` main 브랜치 푸시 시 자동 배포)
+- DB: Neon Postgres (Vercel Marketplace, 리소스 `kolpulse-db`). `DATABASE_URL`(풀링)은 런타임, `DATABASE_URL_UNPOOLED`는 마이그레이션에 사용.
+- 빌드 시 `prisma generate && prisma migrate deploy && next build`가 실행되어 스키마 변경이 자동 적용된다.
+- 운영 DB 시드(최초 1회): `vercel env pull .env.local` 후 `DATABASE_URL=<DATABASE_URL_UNPOOLED 값> npx tsx prisma/seed.ts`. 작업 후 `.env.local`은 삭제해야 로컬 개발이 Docker DB를 계속 쓴다.
+- 운영 환경변수: `AUTH_SECRET`, `AUTH_TRUST_HOST=true` (Vercel 대시보드 또는 `vercel env`).
