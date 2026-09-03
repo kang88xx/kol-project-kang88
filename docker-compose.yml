@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: kolpulse-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kolpulse
+      POSTGRES_PASSWORD: kolpulse
+      POSTGRES_DB: kolpulse
+    ports:
+      - "5433:5432"
+    volumes:
+      - kolpulse-pgdata:/var/lib/postgresql/data
+volumes:
+  kolpulse-pgdata:

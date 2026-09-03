@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  VIEWER
+}
+
+enum Platform {
+  TELEGRAM
+  X
+}
+
+enum AssignmentType {
+  ASSIGNED
+  ORGANIC
+}
+
+enum ProjectStatus {
+  DRAFT
+  ACTIVE
+  ENDED
+}
+
+model Organization {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  users     User[]
+  projects  Project[]
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  name         String
+  passwordHash String
+  role         Role            @default(VIEWER)
+  orgId        String?
+  org          Organization?   @relation(fields: [orgId], references: [id])
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  access       ProjectAccess[]
+}
+
+model ProjectAccess {
+  userId    String
+  projectId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, projectId])
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  logoUrl     String?
+  clientOrgId String?
+  clientOrg   Organization? @relation(fields: [clientOrgId], references: [id])
+  periodStart DateTime
+  periodEnd   DateTime?
+  status      ProjectStatus @default(ACTIVE)
+  keywords    String[]      @default([])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  assignments Assignment[]
+  posts       Post[]
+  access      ProjectAccess[]
+}
+
+model Kol {
+  id        String    @id @default(cuid())
+  name      String
+  note      String?
+  createdAt DateTime  @default(now())
+  channels  Channel[]
+}
+
+model Channel {
+  id          String   @id @default(cuid())
+  displayName String
+  platform    Platform
+  handle      String
+  externalId  String?
+  avatarUrl   String?
+  kolId       String?
+  kol         Kol?     @relation(fields: [kolId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignments Assignment[]
+  posts       Post[]
+
+  @@unique([platform, handle])
+}
+
+model Assignment {
+  id           String         @id @default(cuid())
+  projectId    String
+  channelId    String
+  type         AssignmentType
+  cost         Decimal?       @db.Decimal(14, 2)
+  currency     String?
+  contractNote String?
+  project      Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  channel      Channel        @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now())
+
+  @@unique([projectId, channelId])
+}
+
+model Post {
+  id             String   @id @default(cuid())
+  projectId      String
+  channelId      String
+  externalId     String?
+  url            String?
+  postedAt       DateTime
+  contentExcerpt String?
+
+  // Denormalized "current" metrics. History lives in MetricSnapshot.
+  views            Int       @default(0)
+  comments         Int       @default(0)
+  emojis           Int       @default(0)
+  retweets         Int       @default(0)
+  likes            Int       @default(0)
+  metricsUpdatedAt DateTime?
+
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  channel   Channel          @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  snapshots MetricSnapshot[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([channelId, externalId])
+  @@index([projectId, postedAt])
+}
+
+model MetricSnapshot {
+  id         String   @id @default(cuid())
+  postId     String
+  capturedAt DateTime
+  views      Int      @default(0)
+  comments   Int      @default(0)
+  emojis     Int      @default(0)
+  retweets   Int      @default(0)
+  likes      Int      @default(0)
+  reactions  Json?
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, capturedAt])
+}

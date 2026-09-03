@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KOLpulse
 
-## Getting Started
+크립토 KOL 캠페인 성과 리포팅 대시보드. 에이전시가 고객사에 캠페인 결과(게시물·조회수·반응)를
+Assigned(유료 KOL) / Organic(자발 언급), Telegram / X 소스별로 나눠 보여준다.
 
-First, run the development server:
+## 실행
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up -d          # PostgreSQL 16 (localhost:5433)
+npm install
+npx prisma migrate dev        # 스키마 적용 (+ 클라이언트 생성)
+npx prisma db seed            # 데모 데이터
+npm run dev                   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env`는 `.env.example`을 복사해 만든다. 배포 시 `AUTH_SECRET`은 반드시 새 값으로 바꾼다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 데모 계정
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 역할 | 이메일 | 비밀번호 | 보이는 프로젝트 |
+|---|---|---|---|
+| ADMIN | admin@kolpulse.local | admin1234 | 전체 |
+| VIEWER | viewer@kolpulse.local | viewer1234 | KGEN만 |
 
-## Learn More
+## 구조
 
-To learn more about Next.js, take a look at the following resources:
+- `prisma/schema.prisma` — Organization · User · ProjectAccess · Project · Kol · Channel · Assignment · Post · MetricSnapshot
+- `src/lib/auth*.ts`, `src/proxy.ts` — Auth.js(이메일·비밀번호, JWT), 미로그인 리다이렉트
+- `src/lib/projects.ts` — 역할·배정 기반 프로젝트 스코프
+- `src/lib/metrics.ts` — 대시보드 집계(합계, 소스 분해, 채널 랭킹, 누적 시계열, 게시물 목록)
+- `src/app/(app)/projects` — 프로젝트 목록, `[slug]` 대시보드
+- `src/app/api/projects/[slug]/export` — CSV 내보내기
+- `src/components/dashboard` — 요약 타일, 도넛/랭킹, 시계열 차트·표, 게시물 피드
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 스택
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 16 (App Router) · TypeScript · Tailwind v4 · shadcn/ui(Base UI) · Recharts · Prisma 7 · PostgreSQL · Auth.js v5
