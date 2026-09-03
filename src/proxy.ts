@@ -6,7 +6,9 @@ const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
-  const isLoggedIn = Boolean(req.auth);
+  // A token issued before the username migration lacks `username`; treat it as logged out
+  // so stale cookies fall through to /login instead of bouncing between proxy and page.
+  const isLoggedIn = Boolean(req.auth?.user?.username);
   const isLoginPage = pathname === "/login";
 
   if (!isLoggedIn && !isLoginPage) {
