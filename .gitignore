@@ -44,3 +44,6 @@ next-env.d.ts
 ._*
 
 /src/generated/prisma
+
+# oh-my-claudecode runtime state
+.omc/

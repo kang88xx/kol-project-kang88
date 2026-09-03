@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"cd /Volumes/T9/01_Project/kol-biz/kolpulse; vercel whoami 2>&1 | tail -3; echo \\\"exit=$?\\\"; ls ~/.vercel 2>/dev/null | head; ls .vercel 2>/dev/null\",\"timeout\":60000,\"description\":\"Check Ve...",
-  "error": "Exit code 1\n<claude-code-hint v=\"1\" type=\"plugin\" value=\"vercel@claude-plugins-official\" />\nVercel CLI 59.1.4 (Node.js 25.9.0)\nkang88xx\nexit=0",
-  "timestamp": "2026-09-03T03:28:01.369Z",
-  "retry_count": 1
-}
