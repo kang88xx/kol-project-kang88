@@ -16,11 +16,11 @@ export function ChangePasswordForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="next">새 비밀번호</Label>
-        <Input id="next" name="next" type="password" autoComplete="new-password" minLength={8} required />
+        <Input id="next" name="next" type="password" autoComplete="new-password" minLength={6} required />
       </div>
       <div className="space-y-2">
         <Label htmlFor="confirm">새 비밀번호 확인</Label>
-        <Input id="confirm" name="confirm" type="password" autoComplete="new-password" minLength={8} required />
+        <Input id="confirm" name="confirm" type="password" autoComplete="new-password" minLength={6} required />
       </div>
       {state.error && <p role="alert" className="text-sm text-destructive">{state.error}</p>}
       {state.success && <p role="status" className="text-sm text-emerald-600 dark:text-emerald-400">{state.success}</p>}

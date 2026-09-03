@@ -15,14 +15,14 @@ export async function loginAction(_prev: ActionState, formData: FormData): Promi
   const redirectTo = next.startsWith("/") && !next.startsWith("//") ? next : "/projects";
   try {
     await signIn("credentials", {
-      email: String(formData.get("email") ?? ""),
+      username: String(formData.get("username") ?? ""),
       password: String(formData.get("password") ?? ""),
       redirectTo,
     });
     return {};
   } catch (err) {
     if (err instanceof AuthError) {
-      return { error: "이메일 또는 비밀번호가 올바르지 않습니다." };
+      return { error: "아이디 또는 비밀번호가 올바르지 않습니다." };
     }
     throw err;
   }
@@ -35,7 +35,7 @@ export async function logoutAction() {
 const passwordSchema = z
   .object({
     current: z.string().min(1, "현재 비밀번호를 입력하세요."),
-    next: z.string().min(8, "새 비밀번호는 8자 이상이어야 합니다."),
+    next: z.string().min(6, "새 비밀번호는 6자 이상이어야 합니다."),
     confirm: z.string(),
   })
   .refine((v) => v.next === v.confirm, { message: "새 비밀번호가 일치하지 않습니다.", path: ["confirm"] });

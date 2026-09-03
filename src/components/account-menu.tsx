@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logoutAction } from "@/app/actions/auth";
 
-export function AccountMenu({ name, email, role }: { name: string; email: string; role: "ADMIN" | "VIEWER" }) {
+export function AccountMenu({ name, username, role }: { name: string; username: string; role: "ADMIN" | "VIEWER" }) {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -31,7 +31,7 @@ export function AccountMenu({ name, email, role }: { name: string; email: string
         <DropdownMenuGroup>
           <DropdownMenuLabel className="font-normal">
             <div className="text-sm font-medium">{name}</div>
-            <div className="text-xs text-muted-foreground">{email}</div>
+            <div className="text-xs text-muted-foreground">@{username}</div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

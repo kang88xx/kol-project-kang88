@@ -13,7 +13,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Activity className="size-5" />
           </span>
-          <h1 className="text-xl font-semibold tracking-tight">KOLpulse</h1>
+          <h1 className="text-xl font-semibold tracking-tight">kk.agency</h1>
           <p className="text-sm text-muted-foreground">KOL 캠페인 성과 리포트에 로그인하세요.</p>
         </div>
         <div className="rounded-xl border bg-card p-6 shadow-sm">

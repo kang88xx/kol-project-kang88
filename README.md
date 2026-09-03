@@ -1,4 +1,4 @@
-# KOLpulse
+# kk.agency (코드명 KOLpulse)
 
 크립토 KOL 캠페인 성과 리포팅 대시보드. 에이전시가 고객사에 캠페인 결과(게시물·조회수·반응)를
 Assigned(유료 KOL) / Organic(자발 언급), Telegram / X 소스별로 나눠 보여준다.
@@ -17,15 +17,15 @@ npm run dev                   # http://localhost:3000
 
 ## 데모 계정
 
-| 역할 | 이메일 | 비밀번호 | 보이는 프로젝트 |
+| 역할 | 아이디 | 비밀번호 | 보이는 프로젝트 |
 |---|---|---|---|
-| ADMIN | admin@kolpulse.local | admin1234 | 전체 |
-| VIEWER | viewer@kolpulse.local | viewer1234 | KGEN만 |
+| ADMIN | admin | qwe123 | 전체 |
+| VIEWER | kayla | qwe123 | KGEN만 |
 
 ## 구조
 
 - `prisma/schema.prisma` — Organization · User · ProjectAccess · Project · Kol · Channel · Assignment · Post · MetricSnapshot
-- `src/lib/auth*.ts`, `src/proxy.ts` — Auth.js(이메일·비밀번호, JWT), 미로그인 리다이렉트
+- `src/lib/auth*.ts`, `src/proxy.ts` — Auth.js(아이디·비밀번호, JWT), 미로그인 리다이렉트
 - `src/lib/projects.ts` — 역할·배정 기반 프로젝트 스코프
 - `src/lib/metrics.ts` — 대시보드 집계(합계, 소스 분해, 채널 랭킹, 누적 시계열, 게시물 목록)
 - `src/app/(app)/projects` — 프로젝트 목록, `[slug]` 대시보드

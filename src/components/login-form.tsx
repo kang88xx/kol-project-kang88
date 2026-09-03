@@ -13,8 +13,8 @@ export function LoginForm({ next }: { next?: string }) {
     <form action={action} className="space-y-4">
       <input type="hidden" name="next" value={next ?? ""} />
       <div className="space-y-2">
-        <Label htmlFor="email">이메일</Label>
-        <Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@company.com" />
+        <Label htmlFor="username">아이디</Label>
+        <Input id="username" name="username" type="text" autoComplete="username" autoCapitalize="none" required placeholder="아이디" />
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">비밀번호</Label>

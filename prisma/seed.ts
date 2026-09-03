@@ -199,26 +199,28 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.organization.deleteMany();
 
-  const agency = await prisma.organization.create({ data: { name: "KOLpulse Agency" } });
+  const agency = await prisma.organization.create({ data: { name: "kk.agency" } });
   const kgenOrg = await prisma.organization.create({ data: { name: "KGEN Labs" } });
   const nexaOrg = await prisma.organization.create({ data: { name: "Nexa Foundation" } });
 
   const admin = await prisma.user.create({
     data: {
-      email: "admin@kolpulse.local",
+      username: "admin",
+      email: "admin@kk.agency",
       name: "운영자",
       role: "ADMIN",
       orgId: agency.id,
-      passwordHash: await bcrypt.hash("admin1234", 10),
+      passwordHash: await bcrypt.hash("qwe123", 10),
     },
   });
   const viewer = await prisma.user.create({
     data: {
-      email: "viewer@kolpulse.local",
-      name: "KGEN 마케팅",
+      username: "kayla",
+      email: "kayla@kk.agency",
+      name: "Kayla",
       role: "VIEWER",
       orgId: kgenOrg.id,
-      passwordHash: await bcrypt.hash("viewer1234", 10),
+      passwordHash: await bcrypt.hash("qwe123", 10),
     },
   });
 
@@ -268,7 +270,7 @@ async function main() {
     _count: true,
     _sum: { views: true, comments: true, emojis: true, retweets: true },
   });
-  console.log("Seeded. admin:", admin.email, "viewer:", viewer.email);
+  console.log("Seeded. admin:", admin.username, "viewer:", viewer.username);
   console.log("KGEN totals:", totals._count, totals._sum);
 }
 

@@ -7,7 +7,7 @@ const geistSans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "KOLpulse", template: "%s · KOLpulse" },
+  title: { default: "kk.agency", template: "%s · kk.agency" },
   description: "크립토 KOL 캠페인 성과 리포팅",
 };
 

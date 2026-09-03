@@ -1,13 +1,13 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
-export type SessionUser = { id: string; email: string; name: string; role: "ADMIN" | "VIEWER" };
+export type SessionUser = { id: string; username: string; name: string; role: "ADMIN" | "VIEWER" };
 
 export async function getCurrentUser(): Promise<SessionUser | null> {
   const session = await auth();
   const u = session?.user;
-  if (!u?.id || !u.email) return null;
-  return { id: u.id, email: u.email, name: u.name ?? u.email, role: u.role };
+  if (!u?.id || !u.username) return null;
+  return { id: u.id, username: u.username, name: u.name ?? u.username, role: u.role };
 }
 
 export async function requireUser(): Promise<SessionUser> {

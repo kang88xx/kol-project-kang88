@@ -12,13 +12,13 @@ export function AppHeader({ user }: { user: SessionUser }) {
             <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <Activity className="size-4" />
             </span>
-            KOLpulse
+            kk.agency
           </Link>
           <nav className="hidden items-center gap-4 text-sm text-muted-foreground sm:flex">
             <Link href="/projects" className="hover:text-foreground">My Projects</Link>
           </nav>
         </div>
-        <AccountMenu name={user.name} email={user.email} role={user.role} />
+        <AccountMenu name={user.name} username={user.username} role={user.role} />
       </div>
     </header>
   );
