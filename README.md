@@ -1,4 +1,4 @@
-# kk.agency (코드명 KOLpulse)
+# Uplink (코드명 KOLpulse)
 
 크립토 KOL 캠페인 성과 리포팅 대시보드. 에이전시가 고객사에 캠페인 결과(게시물·조회수·반응)를
 Assigned(유료 KOL) / Organic(자발 언급), Telegram / X 소스별로 나눠 보여준다.
@@ -38,7 +38,7 @@ Next.js 16 (App Router) · TypeScript · Tailwind v4 · shadcn/ui(Base UI) · Re
 
 ## 배포
 
-- 운영 URL: https://kol.kang88.io (Vercel 프로젝트 `kolpulse`, GitHub `kang88xx/kol-project-kang88` main 브랜치 푸시 시 자동 배포)
+- 운영 URL: https://uplink.kang88.io (Vercel 프로젝트 `kolpulse`, GitHub `kang88xx/uplink-kang88` main 브랜치 푸시 시 자동 배포)
 - DB: Neon Postgres (Vercel Marketplace, 리소스 `kolpulse-db`). `DATABASE_URL`(풀링)은 런타임, `DATABASE_URL_UNPOOLED`는 마이그레이션에 사용.
 - 빌드 시 `prisma generate && prisma migrate deploy && next build`가 실행되어 스키마 변경이 자동 적용된다.
 - 운영 DB 시드(최초 1회): `vercel env pull .env.local` 후 `DATABASE_URL=<DATABASE_URL_UNPOOLED 값> npx tsx prisma/seed.ts`. 작업 후 `.env.local`은 삭제해야 로컬 개발이 Docker DB를 계속 쓴다.

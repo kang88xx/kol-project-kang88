@@ -25,13 +25,13 @@ export function AccountMenu({ name, username, role }: { name: string; username: 
       <DropdownMenuTrigger render={<Button variant="outline" size="sm" className="gap-2" />}>
         <UserRound className="size-4" />
         <span className="max-w-32 truncate">{name}</span>
-        <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-muted-foreground">{role}</span>
+        <span className="rounded bg-fill px-1.5 py-0.5 text-caption-2 font-semibold text-label-neutral">{role}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="font-normal">
-            <div className="text-sm font-medium">{name}</div>
-            <div className="text-xs text-muted-foreground">@{username}</div>
+            <div className="text-label-1 font-semibold">{name}</div>
+            <div className="text-caption-1 text-muted-foreground">@{username}</div>
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

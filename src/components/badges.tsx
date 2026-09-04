@@ -1,17 +1,16 @@
 import { cn } from "@/lib/utils";
 import type { AssignmentType, Platform } from "@/lib/metrics";
 
+const chip = "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-caption-2 font-semibold uppercase";
+
 export function TypeBadge({ type, className }: { type: AssignmentType; className?: string }) {
   const assigned = type === "ASSIGNED";
   return (
     <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide",
-        assigned ? "bg-[var(--assigned-soft)] text-[var(--assigned)]" : "bg-[var(--organic-soft)] text-[var(--organic)]",
-        className,
-      )}
+      className={cn(chip, className)}
+      style={{ background: assigned ? "var(--assigned-soft)" : "var(--organic-soft)", color: assigned ? "var(--assigned)" : "var(--organic)" }}
     >
-      <span className="size-1.5 rounded-full" style={{ background: assigned ? "var(--assigned)" : "var(--organic)" }} />
+      <span className="size-1.5 rounded-full bg-current" />
       {assigned ? "Assigned" : "Organic"}
     </span>
   );
@@ -19,7 +18,7 @@ export function TypeBadge({ type, className }: { type: AssignmentType; className
 
 export function PlatformBadge({ platform, className }: { platform: Platform; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center rounded-md border px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground", className)}>
+    <span className={cn("inline-flex items-center rounded-md border border-border px-1.5 py-0.5 text-caption-2 font-medium text-label-neutral", className)}>
       {platform === "TELEGRAM" ? "Telegram" : "X"}
     </span>
   );
@@ -27,13 +26,10 @@ export function PlatformBadge({ platform, className }: { platform: Platform; cla
 
 export function StatusBadge({ status }: { status: "DRAFT" | "ACTIVE" | "ENDED" }) {
   const styles = {
-    ACTIVE: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
-    ENDED: "border-border bg-muted text-muted-foreground",
-    DRAFT: "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400",
+    ACTIVE: "bg-positive-bg text-positive",
+    ENDED: "bg-fill text-label-neutral",
+    DRAFT: "bg-cautionary-bg text-cautionary",
   } as const;
-  return (
-    <span className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-semibold tracking-wide", styles[status])}>
-      {status}
-    </span>
-  );
+  const label = { ACTIVE: "Active", ENDED: "Ended", DRAFT: "Draft" }[status];
+  return <span className={cn("inline-flex items-center rounded-md px-2 py-0.5 text-caption-1 font-semibold", styles[status])}>{label}</span>;
 }

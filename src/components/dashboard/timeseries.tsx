@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Segmented } from "@/components/segmented";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCompact, formatNumber, formatShortDate } from "@/lib/format";
 import type { SeriesPoint } from "@/lib/metrics";
-import { cn } from "@/lib/utils";
 
 type Interval = "daily" | "weekly" | "monthly";
 type View = "chart" | "table";
@@ -50,43 +50,45 @@ export function TimeSeries({ series }: { series: SeriesPoint[] }) {
   const last = data[data.length - 1]?.cumulativeViews ?? 0;
 
   return (
-    <section className="rounded-xl border bg-card p-5 shadow-sm">
+    <section className="surface p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-semibold">View Changes Over Time</h2>
-          <p className="text-xs text-muted-foreground">
+          <h2 className="text-heading-2 font-semibold text-label-strong">View Changes Over Time</h2>
+          <p className="mt-0.5 text-caption-1 text-muted-foreground">
             누적 조회수 · {data.length ? `${formatCompact(first)} → ${formatCompact(last)}` : "데이터 없음"}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Segmented value={interval} onChange={setInterval} options={[["daily", "Daily"], ["weekly", "Weekly"], ["monthly", "Monthly"]]} />
-          <Segmented value={view} onChange={setView} options={[["chart", "Chart"], ["table", "Table"]]} />
+          <Segmented value={interval} onChange={setInterval} options={[["daily", "Daily"], ["weekly", "Weekly"], ["monthly", "Monthly"]]} label="Interval" />
+          <Segmented value={view} onChange={setView} options={[["chart", "Chart"], ["table", "Table"]]} label="View" />
         </div>
       </div>
 
       {data.length === 0 ? (
-        <div className="mt-6 rounded-lg border border-dashed p-10 text-center text-sm text-muted-foreground">아직 수집된 지표가 없습니다.</div>
+        <div className="mt-6 rounded-lg border border-dashed border-[var(--semantic-line-normal-neutral)] p-10 text-center text-body-2 text-muted-foreground">
+          아직 수집된 지표가 없습니다.
+        </div>
       ) : view === "chart" ? (
-        <div className="mt-4 h-72 w-full">
+        <div className="mt-5 h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="viewsFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--series-1)" stopOpacity={0.28} />
+                  <stop offset="0%" stopColor="var(--series-1)" stopOpacity={0.24} />
                   <stop offset="100%" stopColor="var(--series-1)" stopOpacity={0.02} />
                 </linearGradient>
               </defs>
-              <CartesianGrid vertical={false} stroke="var(--border)" strokeDasharray="2 4" />
-              <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} minTickGap={24} />
-              <YAxis tickLine={false} axisLine={false} width={44} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} tickFormatter={(v) => formatCompact(v)} />
+              <CartesianGrid vertical={false} stroke="var(--border-solid)" />
+              <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} minTickGap={24} />
+              <YAxis tickLine={false} axisLine={false} width={44} tick={{ fontSize: 12, fill: "var(--muted-foreground)" }} tickFormatter={(v) => formatCompact(v)} />
               <Tooltip
-                cursor={{ stroke: "var(--muted-foreground)", strokeWidth: 1, strokeDasharray: "3 3" }}
+                cursor={{ stroke: "var(--semantic-interaction-inactive)", strokeWidth: 1, strokeDasharray: "3 3" }}
                 content={({ active, payload }) => {
                   if (!active || !payload?.length) return null;
                   const b = payload[0].payload as Bucket;
                   return (
-                    <div className="rounded-md border bg-popover px-2.5 py-1.5 text-xs shadow-md">
-                      <div className="font-medium">{b.start === b.end ? b.start : `${b.start} – ${b.end}`}</div>
+                    <div className="rounded-lg border border-border bg-popover px-3 py-2 text-caption-1 shadow-md">
+                      <div className="font-semibold text-foreground">{b.start === b.end ? b.start : `${b.start} – ${b.end}`}</div>
                       <div className="text-muted-foreground">누적 {formatNumber(b.cumulativeViews)} · 증가 +{formatNumber(b.deltaViews)}</div>
                       <div className="text-muted-foreground">게시물 {b.posts}</div>
                     </div>
@@ -98,7 +100,7 @@ export function TimeSeries({ series }: { series: SeriesPoint[] }) {
           </ResponsiveContainer>
         </div>
       ) : (
-        <div className="mt-4 max-h-96 overflow-auto rounded-lg border">
+        <div className="mt-5 max-h-96 overflow-auto rounded-lg border border-border">
           <Table>
             <TableHeader className="sticky top-0 bg-card">
               <TableRow>
@@ -122,23 +124,5 @@ export function TimeSeries({ series }: { series: SeriesPoint[] }) {
         </div>
       )}
     </section>
-  );
-}
-
-function Segmented<T extends string>({ value, onChange, options }: { value: T; onChange: (v: T) => void; options: [T, string][] }) {
-  return (
-    <div className="inline-flex rounded-lg border bg-muted/50 p-0.5 text-sm" role="tablist">
-      {options.map(([v, label]) => (
-        <button
-          key={v}
-          role="tab"
-          aria-selected={value === v}
-          onClick={() => onChange(v)}
-          className={cn("rounded-md px-3 py-1", value === v ? "bg-background font-medium shadow-sm" : "text-muted-foreground hover:text-foreground")}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
   );
 }

@@ -31,36 +31,30 @@ export default async function ProjectDashboardPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <Link href="/projects" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/projects" className="inline-flex items-center gap-1 text-label-1 font-medium text-label-neutral hover:text-foreground">
         <ChevronLeft className="size-4" /> My Projects
       </Link>
 
-      <header className="flex flex-col gap-4 rounded-xl border bg-card p-5 shadow-sm md:flex-row md:items-center md:justify-between">
+      <header className="surface flex flex-col gap-5 p-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex size-14 items-center justify-center rounded-xl bg-muted text-lg font-bold uppercase text-muted-foreground">
+          <div className="flex size-14 items-center justify-center rounded-xl bg-fill text-heading-2 font-bold uppercase text-label-neutral">
             {project.name.slice(0, 2)}
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-semibold tracking-tight">{project.name}</h1>
+              <h1 className="text-title-3 font-bold text-label-strong">{project.name}</h1>
               <StatusBadge status={project.status} />
             </div>
-            <p className="mt-0.5 text-sm text-muted-foreground">{project.description}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            {project.description && <p className="mt-0.5 text-body-2 text-label-neutral">{project.description}</p>}
+            <p className="mt-1 text-caption-1 text-muted-foreground">
               {formatPeriod(project.periodStart, project.periodEnd)}
               {project.clientOrg && <> · {project.clientOrg.name}</>}
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-2 text-sm sm:flex-row sm:gap-4">
-          <div className="flex items-center gap-2">
-            <TypeBadge type="ASSIGNED" />
-            <span className="whitespace-nowrap tabular-nums">{assigned.posts} posts · {formatCompact(assigned.views)} views</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <TypeBadge type="ORGANIC" />
-            <span className="whitespace-nowrap tabular-nums">{organic.posts} posts · {formatCompact(organic.views)} views</span>
-          </div>
+        <div className="grid grid-cols-2 gap-3 md:flex md:gap-3">
+          <SplitStat type="ASSIGNED" posts={assigned.posts} views={assigned.views} />
+          <SplitStat type="ORGANIC" posts={organic.posts} views={organic.views} />
         </div>
       </header>
 
@@ -68,6 +62,17 @@ export default async function ProjectDashboardPage({ params }: Props) {
       <Distribution channels={dash.channels} />
       <TimeSeries series={dash.series} />
       <PostsTable posts={dash.posts} exportHref={`/api/projects/${project.slug}/export`} />
+    </div>
+  );
+}
+
+function SplitStat({ type, posts, views }: { type: "ASSIGNED" | "ORGANIC"; posts: number; views: number }) {
+  return (
+    <div className="rounded-lg bg-[var(--semantic-background-normal-alternative)] px-4 py-3">
+      <TypeBadge type={type} />
+      <div className="mt-1.5 whitespace-nowrap text-label-1 tabular-nums text-label-neutral">
+        <span className="font-semibold text-foreground">{posts}</span> posts · <span className="font-semibold text-foreground">{formatCompact(views)}</span> views
+      </div>
     </div>
   );
 }

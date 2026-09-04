@@ -18,29 +18,29 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
   const pageHref = (p: number) => `/projects?${new URLSearchParams({ ...(q ? { q } : {}), page: String(p) })}`;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-8">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">My Projects</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <h1 className="text-title-2 font-bold text-label-strong">My Projects</h1>
+          <p className="mt-1 text-body-2 text-muted-foreground">
             {user.role === "ADMIN" ? "모든 프로젝트를 볼 수 있습니다." : "배정된 프로젝트만 표시됩니다."} 총 {total}개
           </p>
         </div>
         <form className="flex w-full gap-2 sm:w-auto" action="/projects">
           <div className="relative w-full sm:w-72">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input name="q" defaultValue={q} placeholder="이름 또는 설명 검색" className="pl-8" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-label-assistive" />
+            <Input name="q" defaultValue={q} placeholder="이름 또는 설명 검색" className="pl-9" />
           </div>
           <Button type="submit" variant="secondary">검색</Button>
         </form>
       </div>
 
       {projects.length === 0 ? (
-        <div className="rounded-xl border border-dashed p-12 text-center text-sm text-muted-foreground">
+        <div className="rounded-xl border border-dashed border-[var(--semantic-line-normal-neutral)] p-14 text-center text-body-2 text-muted-foreground">
           {q ? `"${q}"에 해당하는 프로젝트가 없습니다.` : "표시할 프로젝트가 없습니다."}
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => (
             <ProjectCard key={p.id} project={p} />
           ))}
@@ -48,11 +48,11 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       )}
 
       {pageCount > 1 && (
-        <div className="flex items-center justify-center gap-2 text-sm">
+        <div className="flex items-center justify-center gap-2">
           <Button variant="outline" size="sm" disabled={page <= 1} nativeButton={false} render={<Link href={pageHref(Math.max(1, page - 1))} />}>
             Prev
           </Button>
-          <span className="px-2 text-muted-foreground">{page} / {pageCount}</span>
+          <span className="px-2 text-label-1 tabular-nums text-muted-foreground">{page} / {pageCount}</span>
           <Button variant="outline" size="sm" disabled={page >= pageCount} nativeButton={false} render={<Link href={pageHref(Math.min(pageCount, page + 1))} />}>
             Next
           </Button>

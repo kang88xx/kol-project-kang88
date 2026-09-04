@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { TypeBadge, PlatformBadge } from "@/components/badges";
+import { Segmented } from "@/components/segmented";
 import { formatNumber, formatPercent } from "@/lib/format";
 import type { ChannelStat } from "@/lib/metrics";
-import { cn } from "@/lib/utils";
 
 const MAX_SLICES = 8;
 const SERIES = Array.from({ length: MAX_SLICES }, (_, i) => `var(--series-${i + 1})`);
@@ -32,7 +32,7 @@ function Donut({ title, slices, unit }: { title: string; slices: Slice[]; unit: 
   const total = slices.reduce((s, x) => s + x.value, 0);
   return (
     <div className="flex flex-col items-center">
-      <div className="mb-1 text-sm font-medium">{title}</div>
+      <div className="mb-1 text-label-1 font-semibold text-label-neutral">{title}</div>
       <div className="relative h-52 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -47,8 +47,8 @@ function Donut({ title, slices, unit }: { title: string; slices: Slice[]; unit: 
                 if (!active || !payload?.length) return null;
                 const s = payload[0].payload as Slice;
                 return (
-                  <div className="rounded-md border bg-popover px-2.5 py-1.5 text-xs shadow-md">
-                    <div className="font-medium">{s.name}</div>
+                  <div className="rounded-lg border border-border bg-popover px-3 py-2 text-caption-1 shadow-md">
+                    <div className="font-semibold text-foreground">{s.name}</div>
                     <div className="text-muted-foreground">
                       {formatNumber(s.value)} {unit} · {formatPercent(s.share)}
                     </div>
@@ -59,8 +59,8 @@ function Donut({ title, slices, unit }: { title: string; slices: Slice[]; unit: 
           </PieChart>
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-          <div className="text-xl font-semibold tabular-nums">{formatNumber(total)}</div>
-          <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{unit}</div>
+          <div className="text-heading-1 font-bold tabular-nums text-label-strong">{formatNumber(total)}</div>
+          <div className="text-caption-2 uppercase text-muted-foreground">{unit}</div>
         </div>
       </div>
     </div>
@@ -78,48 +78,36 @@ export function Distribution({ channels }: { channels: ChannelStat[] }) {
   };
 
   return (
-    <section className="rounded-xl border bg-card p-5 shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <section className="surface p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-semibold">KOL Distribution</h2>
-          <p className="text-xs text-muted-foreground">채널별 게시물·조회수 기여도. 색은 조회수 순위 기준으로 채널에 고정됩니다.</p>
+          <h2 className="text-heading-2 font-semibold text-label-strong">KOL Distribution</h2>
+          <p className="mt-0.5 text-caption-1 text-muted-foreground">채널별 게시물·조회수 기여도. 색은 조회수 순위 기준으로 채널에 고정됩니다.</p>
         </div>
-        <div className="inline-flex rounded-lg border bg-muted/50 p-0.5 text-sm" role="tablist" aria-label="Rank by">
-          {(["views", "posts"] as Metric[]).map((m) => (
-            <button
-              key={m}
-              role="tab"
-              aria-selected={metric === m}
-              onClick={() => setMetric(m)}
-              className={cn("rounded-md px-3 py-1 capitalize", metric === m ? "bg-background font-medium shadow-sm" : "text-muted-foreground hover:text-foreground")}
-            >
-              {m === "views" ? "By Views" : "By Posts"}
-            </button>
-          ))}
-        </div>
+        <Segmented value={metric} onChange={setMetric} options={[["views", "By Views"], ["posts", "By Posts"]]} label="Rank by" />
       </div>
 
-      <div className="mt-4 grid gap-6 lg:grid-cols-[1fr_1fr_1.4fr]">
+      <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_1fr_1.4fr]">
         <Donut title="Post Distribution" slices={postSlices} unit="posts" />
         <Donut title="View Distribution" slices={viewSlices} unit="views" />
-        <ol className="divide-y text-sm">
+        <ol className="divide-y divide-border text-label-1">
           {ranked.map((c, i) => {
             const share = metric === "views" ? c.viewShare : c.postShare;
             return (
-              <li key={c.channelId} className="flex items-center gap-3 py-2">
-                <span className="w-5 text-right text-xs tabular-nums text-muted-foreground">{i + 1}</span>
+              <li key={c.channelId} className="flex items-center gap-3 py-2.5">
+                <span className="w-5 text-right text-caption-1 tabular-nums text-label-assistive">{i + 1}</span>
                 <span className="size-2.5 shrink-0 rounded-sm" style={{ background: colorOf(c.channelId) }} aria-hidden />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="truncate font-medium">{c.displayName}</span>
+                    <span className="truncate font-semibold text-foreground">{c.displayName}</span>
                     <TypeBadge type={c.type} />
                     <PlatformBadge platform={c.platform} className="hidden sm:inline-flex" />
                   </div>
-                  <div className="truncate text-xs text-muted-foreground">@{c.handle}</div>
+                  <div className="truncate text-caption-1 text-muted-foreground">@{c.handle}</div>
                 </div>
                 <div className="text-right tabular-nums">
-                  <div className="font-medium">{formatNumber(c[metric])}</div>
-                  <div className="text-xs text-muted-foreground">{formatPercent(share)}</div>
+                  <div className="font-semibold text-foreground">{formatNumber(c[metric])}</div>
+                  <div className="text-caption-1 text-muted-foreground">{formatPercent(share)}</div>
                 </div>
               </li>
             );

@@ -9,11 +9,11 @@ export default async function AccountPage() {
   return (
     <div className="mx-auto max-w-lg space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">계정</h1>
-        <p className="mt-1 text-sm text-muted-foreground">@{user.username} · {user.role}</p>
+        <h1 className="text-title-2 font-bold text-label-strong">계정</h1>
+        <p className="mt-1 text-body-2 text-muted-foreground">@{user.username} · {user.role}</p>
       </div>
-      <section className="rounded-xl border bg-card p-6 shadow-sm">
-        <h2 className="mb-4 font-semibold">비밀번호 변경</h2>
+      <section className="surface p-6">
+        <h2 className="mb-5 text-heading-2 font-semibold text-label-strong">비밀번호 변경</h2>
         <ChangePasswordForm />
       </section>
     </div>

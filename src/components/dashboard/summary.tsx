@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { StatTile } from "@/components/dashboard/stat-tile";
+import { Segmented } from "@/components/segmented";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatNumber } from "@/lib/format";
 import type { Platform, SourceRow, Totals } from "@/lib/metrics";
-import { cn } from "@/lib/utils";
 
 type SourceKey = "ALL" | Platform;
 const LABEL: Record<SourceKey, string> = { ALL: "All", TELEGRAM: "Telegram", X: "X" };
@@ -19,28 +19,13 @@ export function Summary({ totals, bySource }: { totals: Totals; bySource: Source
   return (
     <section className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="inline-flex rounded-lg border bg-muted/50 p-0.5 text-sm" role="tablist" aria-label="Source">
-          {keys.map((k) => (
-            <button
-              key={k}
-              role="tab"
-              aria-selected={source === k}
-              onClick={() => setSource(k)}
-              className={cn(
-                "rounded-md px-3 py-1 transition-colors",
-                source === k ? "bg-background font-medium shadow-sm" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {LABEL[k]}
-            </button>
-          ))}
-        </div>
-        <button onClick={() => setShowTable((v) => !v)} className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+        <Segmented value={source} onChange={setSource} options={keys.map((k) => [k, LABEL[k]] as [SourceKey, string])} label="Source" />
+        <button type="button" onClick={() => setShowTable((v) => !v)} className="text-label-1 font-medium text-primary underline-offset-4 hover:underline">
           {showTable ? "Source 표 숨기기" : "Source 표 보기"}
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <StatTile label="Total Posts" value={active.posts} />
         <StatTile label="Total Views" value={active.views} />
         <StatTile label="Comments" value={active.comments} />
@@ -49,7 +34,7 @@ export function Summary({ totals, bySource }: { totals: Totals; bySource: Source
       </div>
 
       {showTable && (
-        <div className="overflow-x-auto rounded-xl border bg-card">
+        <div className="surface overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -72,7 +57,7 @@ export function Summary({ totals, bySource }: { totals: Totals; bySource: Source
                   <TableCell className="text-right tabular-nums">{formatNumber(s.retweets)}</TableCell>
                 </TableRow>
               ))}
-              <TableRow className="bg-muted/40 font-medium">
+              <TableRow className="bg-fill font-semibold">
                 <TableCell>Total</TableCell>
                 <TableCell className="text-right tabular-nums">{formatNumber(totals.posts)}</TableCell>
                 <TableCell className="text-right tabular-nums">{formatNumber(totals.views)}</TableCell>
